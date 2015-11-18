@@ -1,0 +1,40 @@
+Quick sample
+$ cat emails.txt
+user@abc.com
+otheruser@xyz.net
+
+$ cat emails.txt| sed 's#@.*##'
+user
+otheruser
+
+$ cat emails.txt | ./sedsed -d --hide=hold 's#@.*##'
+PATT:user@abc.com$
+COMM:s#@.*##
+PATT:user$
+user
+PATT:otheruser@xyz.net$
+COMM:s#@.*##
+PATT:otheruser$
+otheruser
+
+The -d option turns debug ON.
+The --hide=hold options hides the HOLD SPACE buffer contents, because it is always empty on this example.
+The PATT: lines on sedsed's output shows the PATTERN SPACE buffer contents.
+The COMM: yellow lines show the command which is being executed.
+The user and otheruser lines are the sed's normal output.
+The $ sign at the end of PATT: lines represent the end of the buffer.
+
+Indent
+$ cat email-linker.sed
+h;s|.*|<link>&<link>|;x;/@/{s/@.*/'s email:/;G;}
+
+$ ./sedsed --indent -f email-linker.sed
+h
+s|.*|<link>&<link>|
+x
+/@/ {
+    s/@.*/'s email:/
+    G
+}
+
+
